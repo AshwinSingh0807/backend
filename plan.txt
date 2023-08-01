@@ -1,0 +1,26 @@
+MongoDB Database Desig
+{
+    pID: unique product id,
+    name: String,
+    price: Number,
+    description: String,
+    ratings: Number,
+    discount: {
+        type: Boolean,
+        discount: Number
+    },
+    images: [String],
+    size: String,
+    colors: String,
+    gender: String,
+    stock:{
+        type: Boolean,
+        quantity:Number
+    },
+    refund:{
+        policy: String
+    },
+    shippingInfo: String,
+}
+
+ API Schema Design: 
