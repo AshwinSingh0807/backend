@@ -1,26 +1,37 @@
-MongoDB Database Desig
 {
-    pID: unique product id,
-    name: String,
-    price: Number,
-    description: String,
-    ratings: Number,
-    discount: {
-        type: Boolean,
-        discount: Number
-    },
-    images: [String],
-    size: String,
-    colors: String,
-    gender: String,
-    stock:{
-        type: Boolean,
-        quantity:Number
-    },
-    refund:{
-        policy: String
-    },
-    shippingInfo: String,
+    "sku":"10",
+    "name":"Casual wear",
+    "size":"xl",
+    "price":25,
+    "description":"It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look ",
+    "rating":4,
+    "discount":true,
+    "image":[{
+            "url":"https://assets.adidas.com/images/w_1450,h_1450,f_auto,q_auto,fl_lossy,c_fill,g_auto/7b6cbfcc5f2c4436b06129ab5da143ab_9366/Own_the_Run_Leggings_Black_HM8444_HM1.jpg"
+        },
+           {
+            "url":"https://assets.adidas.com/images/h_840,f_auto,q_auto,fl_lossy,c_fill,g_auto/0e17a4943be64a27993daf15009bc353_9366/Run_Icons_3_Bar_Logo_Singlet_Black_IC0365_21_model.jpg"
+        },
+         {
+            "url":"https://assets.adidas.com/images/h_840,f_auto,q_auto,fl_lossy,c_fill,g_auto/0434425fdecc44798631af020136cf8f_9366/Graphics_off_the_Grid_Tee_Black_IC5729_21_model.jpg"
+        },
+        
+      
+    
+               
+        ],
+    "gender":"men",
+    "refundable":"false",
+    "shippingInfo":"Noida sector-62",
+
 }
 
- API Schema Design: 
+Users
+
+{
+"name":"Ash",
+  "email": "ash@gmail.com",
+  "password": "ash",
+  "type":"user",
+  "address": "Delhi"
+}
