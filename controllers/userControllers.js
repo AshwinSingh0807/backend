@@ -9,7 +9,6 @@ const authMiddleware = require("../middlewares/authMiddleware");
 
 dotenv.config();
 
-// Register a new user "./signup"
 exports.registerUser = async (req, res) => {
   const { name, email, password } = req.body;
   try {
@@ -46,7 +45,6 @@ exports.loginUser = async (req, res) => {
       return res.status(401).json({ message: "Invalid password." });
     }
 
-    // Create a JWT token
     const token = jwt.sign({ userId: user._id }, process.env.SECRET_KEY);
 
     res.json({ token });
@@ -56,8 +54,6 @@ exports.loginUser = async (req, res) => {
 };
 
 
-
-// Get profile of the current user "./profile" -getandput
 exports.getUserProfile = async (req, res) => {
   try {
     const user = await User.findById(req.userId).select("-password");
@@ -86,7 +82,6 @@ exports.updateUser = async (req, res) => {
   }
 };
 
-// Delete user "./profile" delete
 exports.deleteUser = async (req, res) => {
   try {
      const exist = await User.findByIdAndDelete(req.userId);
@@ -107,14 +102,12 @@ exports.addToCart = async(req,res) =>{
     const { productId, quantity } = req.body;
     // console.log(userId);
 
-    // Find the user
     const user = await User.findById(userId);
 
     if (!user) {
       return res.status(404).json({ message: 'User not found.' });
     }
 
-    // Find the product
     const product = await Product.findById(productId);
 
     if (!product) {
