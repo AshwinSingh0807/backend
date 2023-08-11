@@ -8,7 +8,6 @@ const {
   getProductDetails,
 } = require("../controllers/productControllers");
 
-
 router.route("/products").get(getAllProducts);
 router.route("/product/new").post(createProduct);
 router

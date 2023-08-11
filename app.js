@@ -12,8 +12,8 @@ const user = require("./routes/userRoute")
 app.use('/api/users', user);
 
 
-const cartRoute = require('./routes/cartRoute');
-app.use('/api/cart', cartRoute);
+// const cartRoute = require('./routes/cartRoute');
+// app.use('/api/cart', cartRoute);
 
 const orderRoutes = require('./routes/orderRouter');
 app.use('/api/orders', orderRoutes);

@@ -1,21 +1,45 @@
 // models/User.js
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
+// const Product = require("../models/products")
 
 const userSchema = mongoose.Schema({
   name: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
+  email: { type: String, required: true },
   password: { type: String, required: true },
-  type: { type: String, default: 'user' },
+  type: { type: String, default: "user" },
   address: { type: String },
-  cart: [
+  cart: [ 
     {
-      product: { type: mongoose.Schema.Types.ObjectId, ref: 'Product' },
-      quantity: { type: Number },
-      total: { type: Number },
-      shippingTime: { type: String },
+      productId: { type: mongoose.Schema.Types.ObjectId, ref: 'Product' },
+      quantity: { type: Number, default:1 },
     },
   ],
 });
-const User = mongoose.model('User', userSchema);
+
+userSchema.methods.addToCart = async function (productId, quantity) {
+  const cartItem = this.cart.find(item => item.product.equals(productId));
+
+  if (cartItem) {
+    cartItem.quantity += quantity;
+  } else {
+    // If the item is not in the cart, add it as a new item
+    this.cart.push({ product: productId, quantity });
+  }
+
+  await this.save();
+  return this;
+};
+
+userSchema.methods.removeFromCart = async function (productId) {
+  const cartItemIndex = this.cart.findIndex(item => item.product.equals(productId));
+
+  if (cartItemIndex !== -1) {
+    // If the item is in the cart, remove it
+    this.cart.splice(cartItemIndex, 1);
+    await this.save();
+  }
+}
+
+const User = mongoose.model("User", userSchema);
 
 module.exports = User;

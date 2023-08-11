@@ -35,3 +35,11 @@ Users
   "type":"user",
   "address": "Delhi"
 }
+
+cart
+{
+  "userId":"64ce32d3eea8b46f7da1881a",
+  "products":{
+    "productId":"64cb75e9aba582afedb8711e"
+  } 
+}

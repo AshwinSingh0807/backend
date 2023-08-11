@@ -1,100 +1,131 @@
-// const bcrypt = require("bcryptjs");
-// const jwt = require("jsonwebtoken");
-// const User = require("../models/user");
+const express = require("express");
+const router = express.Router();
+const bcrypt = require("bcryptjs");
+const Product = require ("../models/products");
+const jwt = require("jsonwebtoken");
+const dotenv = require("dotenv");
+const User = require("../models/user");
+const authMiddleware = require("../middlewares/authMiddleware");
 
-// // Register a new user "./signup"
-// exports.registerUser = async (req, res) => {
-//   try {
-//     const { username, email, password } = req.body;
+dotenv.config();
 
-//     // Check if user with the given email already exists
-//     const existingUser = await User.findOne({ email });
-//     if (existingUser) {
-//       return res
-//         .status(400)
-//         .json({ message: "User with this email already exists." });
-//     }
+// Register a new user "./signup"
+exports.registerUser = async (req, res) => {
+  const { name, email, password } = req.body;
+  try {
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res
+        .status(400)
+        .json({ message: "User with this email already exists." });
+    }
 
-//     // Hash the password
-//     const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-//     // Create the new user
-//     const newUser = new User({ username, email, password: hashedPassword });
-//     await newUser.save();
+    const newUser = new User({ name, email, password: hashedPassword });
+    await newUser.save();
 
-//     res.status(201).json({ message: "User registered successfully." });
-//   } catch (err) {
-//     res.status(500).json({ message: "Internal server error." });
-//   }
-// };
+    res.status(201).json({ message: "User registered successfully." });
+  } catch (err) {
+    res.status(500).json({ message: "Internal server error." });
 
-// // Authenticate and login user "./login"
-// exports.loginUser = async (req, res) => {
-//   try {
-//     const { email, password } = req.body;
+  }
+};
 
-//     // Check if user with the given email exists
-//     const user = await User.findOne({ email });
-//     if (!user) {
-//       return res.status(401).json({ message: "Invalid email ." });
-//     }
+exports.loginUser = async (req, res) => {
+  try {
+    const { email, password } = req.body;
 
-//     // Compare the password
-//     const isPasswordValid = await bcrypt.compare(password, user.password);
-//     if (!isPasswordValid) {
-//       return res.status(401).json({ message: "Invalid password." });
-//     }
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: "Invalid email, user not found." });
+    }
 
-//     // Create a JWT token
-//     const token = jwt.sign({ userId: user._id }, "your_secret_key_here");
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(401).json({ message: "Invalid password." });
+    }
 
-//     res.json({ token });
-//   } catch (err) {
-//     res.status(500).json({ message: "Internal server error." });
-//   }
-// };
+    // Create a JWT token
+    const token = jwt.sign({ userId: user._id }, process.env.SECRET_KEY);
 
-// // Get profile of the current user "./profile" -getandput
-// exports.getUserProfile = async (req, res) => {
-//   try {
-//     const user = await User.findById(req.userId).select("-password");
-//     res.json(user);
-//   } catch (err) {
-//     res.status(500).json({ message: "Internal server error." });
-//   }
-//   // try {
-//   //   const allUsers = await User.find().select('-password');
-//   //   res.json(allUsers);
-//   // } catch (err) {
-//   //   res.status(500).json({ message: 'Internal server error.' });
-//   // }
-// };
+    res.json({ token });
+  } catch (err) {
+    res.status(500).json({ message: "Internal server error." });
+  }
+};
 
-// // putprofile for the user "./profile"
-// exports.updateUser = async (req, res) => {
-//   try {
-//     const { username } = req.body;
-//     const user = await User.findById(req.userId);
 
-//     if (!user) {
-//       return res.status(404).json({ message: "User not found." });
-//     }
 
-//     user.username = username;
-//     await user.save();
+// Get profile of the current user "./profile" -getandput
+exports.getUserProfile = async (req, res) => {
+  try {
+    const user = await User.findById(req.userId).select("-password");
+    res.json(user);
+  } catch (err) {
+    res.status(500).json({ message: "Internal server error." });
+  }
 
-//     res.json({ message: "Profile updated successfully." });
-//   } catch (err) {
-//     res.status(500).json({ message: "Internal server error." });
-//   }
-// };
+};
 
-// // Delete user "./profile" delete
-// exports.deleteUser = async (req, res) => {
-//   try {
-//     await User.findByIdAndDelete(req.userId);
-//     res.json({ message: "Profile deleted successfully." });
-//   } catch (err) {
-//     res.status(500).json({ message: "Internal server error." });
-//   }
-// };
+exports.updateUser = async (req, res) => {
+  try {
+    const { name } = req.body;
+    const user = await User.findById(req.userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found." });
+    }
+
+    user.name = name;
+    await user.save();
+
+    res.json({ message: "Profile updated successfully." });
+  } catch (err) {
+    res.status(500).json({ message: "Internal server error." });
+  }
+};
+
+// Delete user "./profile" delete
+exports.deleteUser = async (req, res) => {
+  try {
+     const exist = await User.findByIdAndDelete(req.userId);
+     if(exist){
+       res.status(200).json({ message: "Profile deleted successfully." });
+     }
+  else{
+    res.status(404).json({message:"User does not exist."})
+  }
+  } catch (err) {
+    res.status(500).json({ message: "Internal server error." });
+  }
+};
+
+exports.addToCart = async(req,res) =>{
+  try {
+    const { userId } = req.params;
+    const { productId, quantity } = req.body;
+    // console.log(userId);
+
+    // Find the user
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found.' });
+    }
+
+    // Find the product
+    const product = await Product.findById(productId);
+
+    if (!product) {
+      return res.status(404).json({ message: 'Product not found.' });
+    }
+
+    user.addToCart(productId, quantity);
+
+    return res.status(200).json({ message: 'Item added to cart successfully.' });
+  } catch (error) {
+    res.status(500).json({ message: 'Internal server error.' });
+  }
+}
+
