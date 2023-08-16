@@ -3,11 +3,13 @@ const mongoose = require("mongoose");
 // const Product = require("../models/products")
 
 const userSchema = mongoose.Schema({
-  name: { type: String, required: true },
+  name: { type: String},
   email: { type: String, required: true },
   password: { type: String, required: true },
   type: { type: String, default: "user" },
   address: { type: String },
+  isDeleted:{type:Boolean, default:false},
+  role:{type:String, enum:["admin","user"], default:"user"  },
   cart: [ 
     {
       productId: { type: mongoose.Schema.Types.ObjectId, ref: 'Product' },
@@ -34,7 +36,6 @@ userSchema.methods.removeFromCart = async function (productId) {
   const cartItemIndex = this.cart.findIndex(item => item.product.equals(productId));
 
   if (cartItemIndex !== -1) {
-    // If the item is in the cart, remove it
     this.cart.splice(cartItemIndex, 1);
     await this.save();
   }

@@ -6,7 +6,7 @@ const {
   registerUser,
   loginUser,
   getUserProfile,
-  updateUser,
+  // updateUser,
   deleteUser,
   addToCart,
 } = require("../controllers/userControllers");
@@ -17,10 +17,11 @@ router.route("/login").post(loginUser);
 router
   .route("/profile")
   .get(authMiddleware, getUserProfile)
-  .put(authMiddleware, updateUser)
   .delete(authMiddleware, deleteUser);
+  
   router.route("/:userId/cart").put(authMiddleware,addToCart);
   
+  // .put(authMiddleware, updateUser)
 
 module.exports = router;
 
