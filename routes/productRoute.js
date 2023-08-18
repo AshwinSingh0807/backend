@@ -10,10 +10,10 @@ const {
   getProductDetails,
 } = require("../controllers/productControllers");
 
-router.route("/products").get(getAllProducts);
-router.route("/product/new").post(authMiddleware , adminMiddleware, createProduct);
+router.route("/").get(getAllProducts).post(authMiddleware , adminMiddleware, createProduct);
+// router.route("/product/new")
 router
-  .route("/product/:id")
+  .route("/:id")
   .get(getProductDetails)
   .put(authMiddleware , adminMiddleware,updateProduct)
   .delete(authMiddleware , adminMiddleware,deleteProduct)

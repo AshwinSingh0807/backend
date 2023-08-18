@@ -38,19 +38,7 @@ const productSchema = mongoose.Schema({
     type: Number,
     default: 0,
   },
-  images: [
-    {
-      url: {
-        type: String,
-        required: true,
-      },
-    },
-    {
-      url: {
-        type: String,
-        required: true,
-      },
-    },
+  images:[
     {
       url: {
         type: String,
@@ -58,6 +46,9 @@ const productSchema = mongoose.Schema({
       },
     },
   ],
+  category:{
+    type:String
+    },
   gender: {
     type: String,
     require: [true, "Please Enter Product Category"],

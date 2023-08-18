@@ -1,6 +1,7 @@
 const Order = require("../models/orders")
 const User = require("../models/user")
 
+// find all orders  
 exports.allOrders = async (req, res) => {
     try {
       const { userId } = req.body;
@@ -11,6 +12,7 @@ exports.allOrders = async (req, res) => {
     }
   };
 
+  // find a particular order by id
   exports.order = async (req, res) => {
     try {
       const { orderId } = req.params; 
@@ -24,6 +26,8 @@ exports.allOrders = async (req, res) => {
       res.status(500).json({ message: 'Internal server error.' });
     }
   };
+
+  // create a new order
   exports.newOrder = async (req, res) => {
 
     try {

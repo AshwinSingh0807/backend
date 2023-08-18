@@ -33,7 +33,7 @@ exports.getProductDetails = async(req,res) =>{
 // Get all products
 exports.getAllProducts = async (req, res) => {
   const page = parseInt(req.query.page);
-  const perPage = 2;
+  const perPage = 5;
   const searchQuery = req.query.searchQuery;
 
   try {
